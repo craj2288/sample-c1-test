@@ -1,10 +1,12 @@
-pipeline {
-    agent { docker { image 'node:6.3' } }
-        stages {
-	        stage('build') {
-		            steps {
-			                    sh 'npm --version'
-					                }
-							        }
-								    }
-								    }
+podTemplate(containers: [
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat')
+    ]) {
+  node(POD_LABEL) {
+    stage('Run shell') {
+      container('docker') {
+        sh 'echo hello world'
+        sh 'docker --version'
+      }
+    }
+  }
+}
